@@ -1,0 +1,344 @@
+<div class="page-shell">
+
+  <!-- ═══════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════ -->
+  <app-header></app-header>
+
+  <!-- ═══════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════ -->
+  <main class="main">
+    <div class="login-layout">
+
+      <!-- ─── LEFT: Form Panel ─── -->
+      <section class="form-panel">
+        <div class="form-container">
+
+          <!-- ═══════════════════════════════════════
+               STEP 1: CREDENTIALS
+               ═══════════════════════════════════════ -->
+          <ng-container *ngIf="currentStep === 'credentials'">
+
+            <!-- Card Header -->
+            <div class="card-header">
+              <div class="card-icon">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                  <rect width="48" height="48" rx="12" fill="#EEF2FF"/>
+                  <rect x="14" y="22" width="20" height="14" rx="3" fill="#2563EB"/>
+                  <path d="M18 22V18a6 6 0 0 1 12 0v4" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="24" cy="29" r="2" fill="white"/>
+                </svg>
+              </div>
+              <h1>Welcome back</h1>
+              <p class="card-subtitle">Sign in to your NexaFlow account to continue</p>
+            </div>
+
+          <!-- Error Alert -->
+          <div *ngIf="errorMessage" class="alert alert-error" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Success Alert -->
+          <div *ngIf="successMessage" class="alert alert-success" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>{{ successMessage }}</span>
+          </div>
+
+          <!-- ─── Login Form ─── -->
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form" novalidate>
+
+            <!-- Username Field -->
+            <div class="form-group">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-wrapper" [class.has-error]="username?.invalid && username?.touched">
+                <span class="input-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  id="username"
+                  formControlName="username"
+                  class="form-input"
+                  placeholder="Enter your username"
+                  autocomplete="username"
+                  spellcheck="false"
+                />
+              </div>
+              <div *ngIf="username?.invalid && username?.touched" class="field-error" role="alert">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span *ngIf="username?.hasError('required')">Username is required</span>
+                <span *ngIf="username?.hasError('minlength')">At least 3 characters required</span>
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <div class="label-row">
+                <label for="password" class="form-label">Password</label>
+                <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+              </div>
+              <div class="input-wrapper" [class.has-error]="password?.invalid && password?.touched">
+                <span class="input-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </span>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  formControlName="password"
+                  class="form-input"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  (click)="togglePassword()"
+                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                >
+                  <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+              <div *ngIf="password?.invalid && password?.touched" class="field-error" role="alert">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span *ngIf="password?.hasError('required')">Password is required</span>
+                <span *ngIf="password?.hasError('minlength')">At least 4 characters required</span>
+              </div>
+            </div>
+
+            <!-- CAPTCHA -->
+            <app-captcha #loginCaptcha (verified)="captchaVerified = $event"></app-captcha>
+
+            <!-- Sign In Button -->
+            <button
+              type="submit"
+              class="btn-submit"
+              [disabled]="!loginForm.valid || isLoading || !captchaVerified"
+            >
+              <span *ngIf="!isLoading" class="btn-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                  <polyline points="10 17 15 12 10 7"/>
+                  <line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+                Sign In
+              </span>
+              <span *ngIf="isLoading" class="btn-spinner" aria-label="Signing in..."></span>
+            </button>
+
+          </form>
+
+          <!-- ─── Demo Credentials ─── -->
+          <div class="demo-section">
+            <div class="demo-divider"><span>Demo Credentials</span></div>
+            <button type="button" class="demo-card" (click)="fillDemoCredentials()" title="Click to auto-fill">
+              <div class="demo-row">
+                <span class="demo-key">Username</span>
+                <code class="demo-val">john_doe</code>
+              </div>
+              <div class="demo-row">
+                <span class="demo-key">Password</span>
+                <code class="demo-val">password123</code>
+              </div>
+              <span class="demo-hint">&#8594; Click to auto-fill</span>
+            </button>
+          </div>
+
+          <!-- Register Link -->
+          <p class="register-link">
+            New to NexaFlow?
+            <a routerLink="/register">Create an account</a>
+          </p>
+
+          </ng-container>
+          <!-- END STEP 1 -->
+
+          <!-- ═══════════════════════════════════════
+               STEP 2: TOTP VERIFICATION
+               ═══════════════════════════════════════ -->
+          <ng-container *ngIf="currentStep === 'totp'">
+
+            <!-- Header -->
+            <div class="card-header totp-header">
+              <div class="totp-shield-icon">
+                <svg width="52" height="52" viewBox="0 0 52 52" fill="none" aria-hidden="true">
+                  <rect width="52" height="52" rx="13" fill="#EEF2FF"/>
+                  <path d="M26 10l14 5v10c0 8-14 17-14 17S12 33 12 25V15l14-5z" fill="#2563EB" opacity=".15"/>
+                  <path d="M26 10l14 5v10c0 8-14 17-14 17S12 33 12 25V15l14-5z" stroke="#2563EB" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M21 26l3.5 3.5L31 22" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h1>Two-step verification</h1>
+              <p class="card-subtitle">
+                Open your authenticator app and enter the 6&#8209;digit code for <strong>NexaFlow</strong>
+              </p>
+            </div>
+
+            <!-- Error / Success alerts -->
+            <div *ngIf="errorMessage" class="alert alert-error" role="alert">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>{{ errorMessage }}</span>
+            </div>
+            <div *ngIf="successMessage" class="alert alert-success" role="alert">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>{{ successMessage }}</span>
+            </div>
+
+            <!-- 6-Digit Input Boxes -->
+            <div class="totp-input-group" (paste)="onTotpPaste($event)">
+              <input
+                *ngFor="let digit of totpDigits; let i = index"
+                [id]="'digit-' + i"
+                type="text"
+                inputmode="numeric"
+                maxlength="1"
+                class="totp-digit"
+                [class.filled]="digit !== ''"
+                [value]="digit"
+                (input)="onTotpInput($event, i)"
+                (keydown)="onTotpKeydown($event, i)"
+                autocomplete="one-time-code"
+                [attr.aria-label]="'Digit ' + (i + 1) + ' of 6'"
+              />
+            </div>
+
+            <!-- Timer Row -->
+            <div class="totp-timer-row">
+              <div class="totp-timer">
+                <svg width="48" height="48" viewBox="0 0 48 48" class="timer-svg">
+                  <circle cx="24" cy="24" r="20" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+                  <circle
+                    cx="24" cy="24" r="20"
+                    fill="none"
+                    stroke="#2563eb"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    [attr.stroke-dasharray]="timerCircumference"
+                    [attr.stroke-dashoffset]="timerDashOffset"
+                    transform="rotate(-90 24 24)"
+                    class="timer-progress"
+                    [class.timer-warning]="totpTimer <= 8"
+                  />
+                  <text x="24" y="28" text-anchor="middle" class="timer-text" [class.timer-text-warning]="totpTimer <= 8">{{ totpTimer }}</text>
+                </svg>
+                <div class="timer-label">
+                  <span [class.text-warning]="totpTimer <= 8">Code expires in {{ totpTimer }}s</span>
+                  <small>A new code generates every 30 seconds</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Supported Apps -->
+            <div class="totp-apps">
+              <span class="apps-label">Works with:</span>
+              <span class="app-tag">Google Authenticator</span>
+              <span class="app-tag">Microsoft Authenticator</span>
+              <span class="app-tag">Authy</span>
+            </div>
+
+            <!-- Spinner during verify -->
+            <div *ngIf="isLoading" class="totp-verifying">
+              <span class="btn-spinner"></span>
+              <span>Verifying…</span>
+            </div>
+
+            <!-- Back link -->
+            <button type="button" class="back-link" (click)="backToCredentials()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              Back to sign in
+            </button>
+
+          </ng-container>
+          <!-- END STEP 2 -->
+
+        </div>
+      </section>
+
+      <!-- ─── RIGHT: Brand Panel ─── -->
+      <aside class="brand-panel" aria-hidden="true">
+        <div class="brand-content">
+
+          <div class="brand-logo-wrap">
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+              <rect width="56" height="56" rx="14" fill="rgba(255,255,255,0.1)"/>
+              <path d="M14 28L23 37L42 19" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <h2>NexaFlow<br/><span class="brand-accent">Enterprise</span></h2>
+
+          <p class="brand-desc">
+            The modern enterprise platform built for high-performance teams.
+            Collaborate securely and scale with confidence.
+          </p>
+
+          <ul class="feature-list">
+            <li>
+              <span class="feature-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              Enterprise-grade security &amp; compliance
+            </li>
+            <li>
+              <span class="feature-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              99.99% uptime SLA guarantee
+            </li>
+            <li>
+              <span class="feature-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              SOC 2 Type II &amp; ISO 27001 certified
+            </li>
+            <li>
+              <span class="feature-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              24/7 dedicated enterprise support
+            </li>
+          </ul>
+
+          <div class="trust-badges">
+            <span class="trust-badge">SOC 2</span>
+            <span class="trust-badge">ISO 27001</span>
+            <span class="trust-badge">GDPR</span>
+            <span class="trust-badge">HIPAA</span>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════ -->
+  <app-footer></app-footer>
+
+</div>

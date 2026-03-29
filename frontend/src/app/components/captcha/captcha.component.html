@@ -1,0 +1,65 @@
+<div class="captcha-container">
+  <p class="captcha-label">Security Verification <span class="req">*</span></p>
+
+  <!-- Canvas + Refresh -->
+  <div class="captcha-row">
+    <canvas #captchaCanvas width="224" height="66" class="captcha-canvas"
+            role="img" aria-label="CAPTCHA visual challenge"></canvas>
+    <button type="button" class="refresh-btn" (click)="refresh()"
+            title="Get a new code" aria-label="Refresh CAPTCHA">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.2">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Input -->
+  <div class="captcha-input-wrap"
+       [class.is-error]="isError"
+       [class.is-success]="isSuccess">
+    <span class="cap-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </span>
+    <input #captchaInput
+           type="text"
+           class="captcha-input"
+           [value]="userInput"
+           (input)="onInput($event)"
+           placeholder="Type the characters above"
+           autocomplete="off"
+           spellcheck="false"
+           maxlength="6"
+           aria-label="Enter CAPTCHA code"/>
+    <span class="status-icon" *ngIf="isSuccess">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </span>
+    <span class="status-icon" *ngIf="isError">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="#dc2626" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </span>
+  </div>
+
+  <!-- Feedback messages -->
+  <p *ngIf="isError" class="cap-msg cap-error">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    Wrong code — a new challenge has been generated
+  </p>
+  <p *ngIf="isSuccess" class="cap-msg cap-success">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    Verified ✓
+  </p>
+</div>

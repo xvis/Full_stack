@@ -1,0 +1,379 @@
+<div class="page-shell">
+  <app-header></app-header>
+
+  <main class="main">
+    <div class="register-wrap">
+      <div class="register-card">
+
+        <!-- ── Top Brand ── -->
+        <div class="card-brand">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect width="32" height="32" rx="8" fill="#2563EB"/>
+            <path d="M10 22l6-12 6 12" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12.5 18h7" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+          <span class="brand-name">NexaFlow</span>
+        </div>
+
+        <h1 class="card-title">Create your account</h1>
+        <p class="card-subtitle">Join thousands of teams using NexaFlow</p>
+
+        <!-- ── Progress Stepper ── -->
+        <div class="stepper" role="list">
+          <ng-container *ngFor="let s of steps; let last = last">
+            <div class="step-item"
+                 [class.active]="currentStep === s.num"
+                 [class.done]="currentStep > s.num"
+                 role="listitem">
+              <div class="step-circle">
+                <svg *ngIf="currentStep > s.num" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span *ngIf="currentStep <= s.num">{{ s.num }}</span>
+              </div>
+              <div class="step-label">
+                <span class="step-title">{{ s.label }}</span>
+              </div>
+            </div>
+            <div *ngIf="!last" class="step-connector" [class.done]="currentStep > s.num"></div>
+          </ng-container>
+        </div>
+
+        <!-- ── Alerts ── -->
+        <div *ngIf="errorMessage" class="alert alert-error" role="alert">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="successMessage" class="alert alert-success" role="alert">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          {{ successMessage }}
+        </div>
+
+        <!-- ════════════════════════════════
+             STEP 1 — Basic Details
+             ════════════════════════════════ -->
+        <form *ngIf="currentStep === 1" [formGroup]="step1" (ngSubmit)="next()" novalidate class="step-form">
+
+          <div class="field-row">
+            <div class="form-group">
+              <label class="form-label">First Name <span class="req">*</span></label>
+              <input formControlName="firstName" type="text" class="form-input"
+                     [class.has-error]="f1['firstName'].invalid && f1['firstName'].touched"
+                     placeholder="John" autocomplete="given-name"/>
+              <div *ngIf="f1['firstName'].invalid && f1['firstName'].touched" class="field-error">
+                <span *ngIf="f1['firstName'].hasError('required')">Required</span>
+                <span *ngIf="f1['firstName'].hasError('minlength')">Min 2 characters</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name <span class="req">*</span></label>
+              <input formControlName="lastName" type="text" class="form-input"
+                     [class.has-error]="f1['lastName'].invalid && f1['lastName'].touched"
+                     placeholder="Doe" autocomplete="family-name"/>
+              <div *ngIf="f1['lastName'].invalid && f1['lastName'].touched" class="field-error">
+                <span *ngIf="f1['lastName'].hasError('required')">Required</span>
+                <span *ngIf="f1['lastName'].hasError('minlength')">Min 2 characters</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address <span class="req">*</span></label>
+            <div class="input-wrapper" [class.has-error]="f1['email'].invalid && f1['email'].touched">
+              <span class="input-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <input formControlName="email" type="email" class="form-input"
+                     placeholder="john@company.com" autocomplete="email"/>
+            </div>
+            <div *ngIf="f1['email'].invalid && f1['email'].touched" class="field-error">
+              <span *ngIf="f1['email'].hasError('required')">Email is required</span>
+              <span *ngIf="f1['email'].hasError('email')">Enter a valid email address</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Username <span class="req">*</span></label>
+            <div class="input-wrapper" [class.has-error]="f1['username'].invalid && f1['username'].touched">
+              <span class="input-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input formControlName="username" type="text" class="form-input"
+                     placeholder="john_doe" autocomplete="username" spellcheck="false"/>
+            </div>
+            <div *ngIf="f1['username'].invalid && f1['username'].touched" class="field-error">
+              <span *ngIf="f1['username'].hasError('required')">Username is required</span>
+              <span *ngIf="f1['username'].hasError('minlength')">Min 3 characters</span>
+              <span *ngIf="f1['username'].hasError('pattern')">Only letters, numbers and underscores</span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="form-group">
+              <label class="form-label">Password <span class="req">*</span></label>
+              <div class="input-wrapper" [class.has-error]="f1['password'].invalid && f1['password'].touched">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                       class="form-input" placeholder="Min 8 characters" autocomplete="new-password"/>
+                <button type="button" class="toggle-password" (click)="togglePassword()" [attr.aria-label]="showPassword ? 'Hide' : 'Show'">
+                  <svg *ngIf="!showPassword" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showPassword" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <!-- Strength bar -->
+              <div class="strength-bar" *ngIf="f1['password'].value">
+                <div class="strength-track">
+                  <div class="strength-fill"
+                       [style.width.%]="passwordStrength.level * 25"
+                       [attr.data-level]="passwordStrength.level"></div>
+                </div>
+                <span class="strength-label" [attr.data-level]="passwordStrength.level">{{ passwordStrength.label }}</span>
+              </div>
+              <div *ngIf="f1['password'].invalid && f1['password'].touched" class="field-error">
+                <span *ngIf="f1['password'].hasError('required')">Password is required</span>
+                <span *ngIf="f1['password'].hasError('minlength')">Min 8 characters</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Confirm Password <span class="req">*</span></label>
+              <div class="input-wrapper" [class.has-error]="f1['confirmPassword'].invalid && f1['confirmPassword'].touched">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
+                       class="form-input" placeholder="Re-enter password" autocomplete="new-password"/>
+                <button type="button" class="toggle-password" (click)="toggleConfirmPassword()" [attr.aria-label]="showConfirmPassword ? 'Hide' : 'Show'">
+                  <svg *ngIf="!showConfirmPassword" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showConfirmPassword" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+              <div *ngIf="f1['confirmPassword'].invalid && f1['confirmPassword'].touched" class="field-error">
+                <span *ngIf="f1['confirmPassword'].hasError('required')">Please confirm your password</span>
+                <span *ngIf="f1['confirmPassword'].hasError('passwordMismatch')">Passwords do not match</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <a routerLink="/login" class="btn-ghost">← Back to Sign In</a>
+            <button type="submit" class="btn-next">Next: Address →</button>
+          </div>
+
+        </form>
+
+        <!-- ════════════════════════════════
+             STEP 2 — Address
+             ════════════════════════════════ -->
+        <form *ngIf="currentStep === 2" [formGroup]="step2" (ngSubmit)="next()" novalidate class="step-form">
+
+          <div class="form-group">
+            <label class="form-label">Street Address <span class="req">*</span></label>
+            <div class="input-wrapper" [class.has-error]="f2['street'].invalid && f2['street'].touched">
+              <span class="input-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </span>
+              <input formControlName="street" type="text" class="form-input"
+                     placeholder="123 Main Street, Apt 4B" autocomplete="street-address"/>
+            </div>
+            <div *ngIf="f2['street'].invalid && f2['street'].touched" class="field-error">
+              <span *ngIf="f2['street'].hasError('required')">Street address is required</span>
+              <span *ngIf="f2['street'].hasError('minlength')">Enter your full street address</span>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="form-group">
+              <label class="form-label">City <span class="req">*</span></label>
+              <input formControlName="city" type="text" class="form-input"
+                     [class.has-error]="f2['city'].invalid && f2['city'].touched"
+                     placeholder="New York" autocomplete="address-level2"/>
+              <div *ngIf="f2['city'].invalid && f2['city'].touched" class="field-error">
+                <span>City is required</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">State / Province <span class="req">*</span></label>
+              <input formControlName="state" type="text" class="form-input"
+                     [class.has-error]="f2['state'].invalid && f2['state'].touched"
+                     placeholder="NY" autocomplete="address-level1"/>
+              <div *ngIf="f2['state'].invalid && f2['state'].touched" class="field-error">
+                <span>State is required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="form-group">
+              <label class="form-label">Country <span class="req">*</span></label>
+              <div class="input-wrapper" [class.has-error]="f2['country'].invalid && f2['country'].touched">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </span>
+                <input formControlName="country" type="text" class="form-input"
+                       placeholder="United States" autocomplete="country-name"/>
+              </div>
+              <div *ngIf="f2['country'].invalid && f2['country'].touched" class="field-error">
+                <span>Country is required</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">ZIP / Postal Code <span class="req">*</span></label>
+              <input formControlName="zipCode" type="text" class="form-input"
+                     [class.has-error]="f2['zipCode'].invalid && f2['zipCode'].touched"
+                     placeholder="10001" autocomplete="postal-code"/>
+              <div *ngIf="f2['zipCode'].invalid && f2['zipCode'].touched" class="field-error">
+                <span *ngIf="f2['zipCode'].hasError('required')">ZIP code is required</span>
+                <span *ngIf="f2['zipCode'].hasError('pattern')">Enter a valid ZIP / postal code</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn-ghost" (click)="prev()">← Back</button>
+            <button type="submit" class="btn-next">Next: Security →</button>
+          </div>
+
+        </form>
+
+        <!-- ════════════════════════════════
+             STEP 3 — Security Question
+             ════════════════════════════════ -->
+        <form *ngIf="currentStep === 3" [formGroup]="step3" (ngSubmit)="onSendCode()" novalidate class="step-form">
+
+          <div class="security-info">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <p>Your security question is used to verify your identity if you ever need to recover your account.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Security Question <span class="req">*</span></label>
+            <div class="select-wrapper" [class.has-error]="f3['securityQuestion'].invalid && f3['securityQuestion'].touched">
+              <svg class="select-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <select formControlName="securityQuestion" class="form-select">
+                <option value="" disabled>Choose a security question…</option>
+                <option *ngFor="let q of securityQuestions" [value]="q">{{ q }}</option>
+              </select>
+              <svg class="select-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div *ngIf="f3['securityQuestion'].invalid && f3['securityQuestion'].touched" class="field-error">
+              <span>Please select a security question</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your Answer <span class="req">*</span></label>
+            <div class="input-wrapper" [class.has-error]="f3['securityAnswer'].invalid && f3['securityAnswer'].touched">
+              <span class="input-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              </span>
+              <input formControlName="securityAnswer" type="text" class="form-input"
+                     placeholder="Your answer (case-insensitive)"
+                     autocomplete="off" spellcheck="false"/>
+            </div>
+            <div *ngIf="f3['securityAnswer'].invalid && f3['securityAnswer'].touched" class="field-error">
+              <span *ngIf="f3['securityAnswer'].hasError('required')">Answer is required</span>
+              <span *ngIf="f3['securityAnswer'].hasError('minlength')">Min 2 characters</span>
+            </div>
+            <p class="field-hint">Your answer is stored securely and is not case-sensitive.</p>
+          </div>
+
+          <!-- CAPTCHA -->
+          <app-captcha #regCaptcha (verified)="captchaVerified = $event"></app-captcha>
+
+          <div class="btn-row">
+            <button type="button" class="btn-ghost" (click)="prev()">← Back</button>
+            <button type="submit" class="btn-submit" [disabled]="isLoading || !captchaVerified">
+              <span *ngIf="!isLoading">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Send Verification Code
+              </span>
+              <span *ngIf="isLoading" class="btn-spinner" aria-label="Sending code…"></span>
+            </button>
+          </div>
+
+        </form>
+
+        <!-- ════════════════════════════════
+             STEP 4 — Email Verification
+             ════════════════════════════════ -->
+        <div *ngIf="currentStep === 4" class="step-form">
+
+          <!-- Info banner -->
+          <div class="email-verify-banner">
+            <div class="evb-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="1.8">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div class="evb-text">
+              <p class="evb-title">Check your inbox!</p>
+              <p class="evb-sub">We sent a 6-digit code to <strong>{{ maskedEmail }}</strong>.<br>Enter it below to complete your registration.</p>
+            </div>
+          </div>
+
+          <!-- 6-digit boxes -->
+          <div class="otp-label">Verification Code <span class="req">*</span></div>
+          <div class="otp-digits">
+            <input
+              *ngFor="let d of codeDigits; let i = index"
+              #codeInput
+              type="text"
+              inputmode="numeric"
+              maxlength="1"
+              class="otp-digit"
+              [value]="codeDigits[i]"
+              (input)="onCodeDigit(i, $event)"
+              (keydown)="onCodeKeydown(i, $event)"
+              [attr.aria-label]="'Digit ' + (i + 1)"
+              placeholder="·"
+            />
+          </div>
+
+          <!-- Resend row -->
+          <div class="resend-row">
+            <span *ngIf="resendCountdown > 0" class="resend-timer">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Resend in {{ resendCountdown }}s
+            </span>
+            <button *ngIf="resendCountdown === 0" type="button" class="resend-btn" (click)="resendCode()" [disabled]="isLoading">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 .49-3.43"/>
+              </svg>
+              Resend Code
+            </button>
+          </div>
+
+          <!-- Actions -->
+          <div class="btn-row">
+            <button type="button" class="btn-ghost" (click)="prev()">← Back</button>
+            <button
+              type="button"
+              class="btn-submit"
+              [disabled]="codeDigits.join('').length < 6 || isLoading"
+              (click)="onVerifyEmail()">
+              <span *ngIf="!isLoading">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verify &amp; Create Account
+              </span>
+              <span *ngIf="isLoading" class="btn-spinner" aria-label="Verifying…"></span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- ── Footer Link ── -->
+        <p class="card-footer-link">
+          Already have an account? <a routerLink="/login">Sign in</a>
+        </p>
+
+      </div>
+    </div>
+  </main>
+
+  <app-footer></app-footer>
+</div>
