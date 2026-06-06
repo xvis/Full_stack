@@ -30,8 +30,8 @@
                   <circle cx="24" cy="29" r="2" fill="white"/>
                 </svg>
               </div>
-              <h1>Welcome back</h1>
-              <p class="card-subtitle">Sign in to your NexaFlow account to continue</p>
+              <h1>{{ 'login.welcomeBack' | translate }}</h1>
+              <p class="card-subtitle">{{ 'login.subtitle' | translate }}</p>
             </div>
 
           <!-- Error Alert -->
@@ -57,7 +57,7 @@
 
             <!-- Username Field -->
             <div class="form-group">
-              <label for="username" class="form-label">Username</label>
+              <label for="username" class="form-label">{{ 'login.username' | translate }}</label>
               <div class="input-wrapper" [class.has-error]="username?.invalid && username?.touched">
                 <span class="input-icon" aria-hidden="true">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -70,7 +70,7 @@
                   id="username"
                   formControlName="username"
                   class="form-input"
-                  placeholder="Enter your username"
+                  [placeholder]="'login.usernamePlaceholder' | translate"
                   autocomplete="username"
                   spellcheck="false"
                 />
@@ -79,16 +79,16 @@
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
-                <span *ngIf="username?.hasError('required')">Username is required</span>
-                <span *ngIf="username?.hasError('minlength')">At least 3 characters required</span>
+                <span *ngIf="username?.hasError('required')">{{ 'login.usernameRequired' | translate }}</span>
+                <span *ngIf="username?.hasError('minlength')">{{ 'login.usernameMinlength' | translate }}</span>
               </div>
             </div>
 
             <!-- Password Field -->
             <div class="form-group">
               <div class="label-row">
-                <label for="password" class="form-label">Password</label>
-                <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+                <label for="password" class="form-label">{{ 'login.password' | translate }}</label>
+                <a routerLink="/forgot-password" class="forgot-link">{{ 'login.forgotPassword' | translate }}</a>
               </div>
               <div class="input-wrapper" [class.has-error]="password?.invalid && password?.touched">
                 <span class="input-icon" aria-hidden="true">
@@ -102,7 +102,7 @@
                   id="password"
                   formControlName="password"
                   class="form-input"
-                  placeholder="Enter your password"
+                  [placeholder]="'login.passwordPlaceholder' | translate"
                   autocomplete="current-password"
                 />
                 <button
@@ -125,8 +125,8 @@
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
-                <span *ngIf="password?.hasError('required')">Password is required</span>
-                <span *ngIf="password?.hasError('minlength')">At least 4 characters required</span>
+                <span *ngIf="password?.hasError('required')">{{ 'login.passwordRequired' | translate }}</span>
+                <span *ngIf="password?.hasError('minlength')">{{ 'login.passwordMinlength' | translate }}</span>
               </div>
             </div>
 
@@ -147,31 +147,31 @@
                 </svg>
                 Sign In
               </span>
-              <span *ngIf="isLoading" class="btn-spinner" aria-label="Signing in..."></span>
+              <span *ngIf="isLoading" class="btn-spinner" [attr.aria-label]="'login.signIn' | translate"></span>
             </button>
 
           </form>
 
           <!-- ─── Demo Credentials ─── -->
           <div class="demo-section">
-            <div class="demo-divider"><span>Demo Credentials</span></div>
+            <div class="demo-divider"><span>{{ 'login.demoCredentials' | translate }}</span></div>
             <button type="button" class="demo-card" (click)="fillDemoCredentials()" title="Click to auto-fill">
               <div class="demo-row">
-                <span class="demo-key">Username</span>
+                <span class="demo-key">{{ 'login.username' | translate }}</span>
                 <code class="demo-val">john_doe</code>
               </div>
               <div class="demo-row">
-                <span class="demo-key">Password</span>
+                <span class="demo-key">{{ 'login.password' | translate }}</span>
                 <code class="demo-val">password123</code>
               </div>
-              <span class="demo-hint">&#8594; Click to auto-fill</span>
+              <span class="demo-hint">{{ 'login.clickToFill' | translate }}</span>
             </button>
           </div>
 
           <!-- Register Link -->
           <p class="register-link">
-            New to NexaFlow?
-            <a routerLink="/register">Create an account</a>
+            {{ 'login.newToNexaFlow' | translate }}
+            <a routerLink="/register">{{ 'login.createAccount' | translate }}</a>
           </p>
 
           </ng-container>
@@ -192,9 +192,9 @@
                   <path d="M21 26l3.5 3.5L31 22" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h1>Two-step verification</h1>
+              <h1>{{ 'login.twoStepTitle' | translate }}</h1>
               <p class="card-subtitle">
-                Open your authenticator app and enter the 6&#8209;digit code for <strong>NexaFlow</strong>
+                {{ 'login.twoStepSubtitle' | translate }}
               </p>
             </div>
 
@@ -246,15 +246,15 @@
                   <text x="24" y="28" text-anchor="middle" class="timer-text" [class.timer-text-warning]="totpTimer <= 8">{{ totpTimer }}</text>
                 </svg>
                 <div class="timer-label">
-                  <span [class.text-warning]="totpTimer <= 8">Code expires in {{ totpTimer }}s</span>
-                  <small>A new code generates every 30 seconds</small>
+                  <span [class.text-warning]="totpTimer <= 8">{{ 'login.codeExpiresIn' | translate:{n: totpTimer} }}</span>
+                  <small>{{ 'login.newCodeEvery' | translate }}</small>
                 </div>
               </div>
             </div>
 
             <!-- Supported Apps -->
             <div class="totp-apps">
-              <span class="apps-label">Works with:</span>
+              <span class="apps-label">{{ 'login.worksWith' | translate }}</span>
               <span class="app-tag">Google Authenticator</span>
               <span class="app-tag">Microsoft Authenticator</span>
               <span class="app-tag">Authy</span>
@@ -263,13 +263,13 @@
             <!-- Spinner during verify -->
             <div *ngIf="isLoading" class="totp-verifying">
               <span class="btn-spinner"></span>
-              <span>Verifying…</span>
+              <span>{{ 'login.verifying' | translate }}</span>
             </div>
 
             <!-- Back link -->
             <button type="button" class="back-link" (click)="backToCredentials()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-              Back to sign in
+              {{ 'login.backToSignIn' | translate }}
             </button>
 
           </ng-container>
@@ -292,34 +292,25 @@
           <h2>NexaFlow<br/><span class="brand-accent">Enterprise</span></h2>
 
           <p class="brand-desc">
-            The modern enterprise platform built for high-performance teams.
-            Collaborate securely and scale with confidence.
+            {{ 'login.brandDesc' | translate }}
           </p>
 
           <ul class="feature-list">
             <li>
-              <span class="feature-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-              Enterprise-grade security &amp; compliance
+              <span class="feature-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+              {{ 'login.feature1' | translate }}
             </li>
             <li>
-              <span class="feature-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-              99.99% uptime SLA guarantee
+              <span class="feature-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+              {{ 'login.feature2' | translate }}
             </li>
             <li>
-              <span class="feature-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-              SOC 2 Type II &amp; ISO 27001 certified
+              <span class="feature-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+              {{ 'login.feature3' | translate }}
             </li>
             <li>
-              <span class="feature-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-              24/7 dedicated enterprise support
+              <span class="feature-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+              {{ 'login.feature4' | translate }}
             </li>
           </ul>
 
