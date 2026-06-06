@@ -3,18 +3,18 @@ import {
   EventEmitter, Output, ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 function rand(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-const CHARS  = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-const COLORS = ['#1e40af', '#0f766e', '#7c3aed', '#b91c1c', '#0369a1', '#15803d'];
+const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
 
 @Component({
   selector: 'app-captcha',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './captcha.component.html',
   styleUrl: './captcha.component.css'
 })
@@ -78,49 +78,53 @@ export class CaptchaComponent implements AfterViewInit {
     const canvas = this.canvasRef?.nativeElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
-    const W = canvas.width, H = canvas.height;
+    // Canvas buffer: 560×160 — displayed at 260×70 CSS (≈2× retina clarity)
+    const W = canvas.width;   // 560
+    const H = canvas.height;  // 160
 
     ctx.clearRect(0, 0, W, H);
 
-    // Gradient background
-    const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#eef2ff');
-    bg.addColorStop(1, '#f0f9ff');
-    ctx.fillStyle = bg;
+    // 1 ── White background
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, W, H);
 
-    // Noise — bezier curves
-    for (let i = 0; i < 7; i++) {
+    // 2 ── Very subtle scatter dots (barely visible, like TCS)
+    for (let i = 0; i < 60; i++) {
       ctx.beginPath();
-      ctx.moveTo(rand(0, W), rand(0, H));
-      ctx.bezierCurveTo(rand(0, W), rand(0, H), rand(0, W), rand(0, H), rand(0, W), rand(0, H));
-      ctx.strokeStyle = `rgba(${rand(80,160)},${rand(80,160)},${rand(80,200)},0.25)`;
-      ctx.lineWidth = rand(1, 2);
-      ctx.stroke();
-    }
-
-    // Noise — dots
-    for (let i = 0; i < 55; i++) {
-      ctx.beginPath();
-      ctx.arc(rand(0, W), rand(0, H), Math.random() * 1.8, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${rand(60,180)},${rand(60,180)},${rand(60,180)},0.38)`;
+      ctx.arc(rand(0, W), rand(0, H), rand(1, 2), 0, Math.PI * 2);
+      const a = (Math.random() * 0.10 + 0.04).toFixed(2);
+      ctx.fillStyle = `rgba(150, 160, 175, ${a})`;
       ctx.fill();
     }
 
-    // Characters — rotated, varied size + colour
-    const cw = W / (this.code.length + 1);
+    // 3 ── Characters: dark gray, monospace, mild tilt
+    //      Font 82-96px in 160px buffer → visually ~36-42px in 70px CSS box → fills ~52-60% of height (TCS proportion)
+    const charCount = this.code.length;
+    const slotW = W / (charCount + 1);
+
     this.code.split('').forEach((ch, i) => {
+      const x = slotW * (i + 0.88) + rand(-8, 8);
+      const y = H * 0.68 + rand(-10, 10);   // baseline sits at ~68% of buffer height
+
       ctx.save();
-      ctx.translate(cw * (i + 0.88) + rand(-3, 3), H * 0.64 + rand(-5, 5));
-      ctx.rotate((Math.random() - 0.5) * 0.42);
-      ctx.font = `bold ${rand(22, 28)}px Arial, sans-serif`;
-      ctx.fillStyle = COLORS[i % COLORS.length];
-      ctx.shadowColor = 'rgba(0,0,0,0.12)';
-      ctx.shadowBlur = 3;
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
+      ctx.translate(x, y);
+      ctx.rotate((Math.random() - 0.5) * 0.18);   // ±0.09 rad — subtle, like TCS
+      const size = rand(82, 96);
+      ctx.font = `400 ${size}px "Courier New", Courier, monospace`;
+      const shade = rand(38, 70);   // near-black to mid-gray, no bright colors
+      ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
       ctx.fillText(ch, 0, 0);
       ctx.restore();
     });
+
+    // 4 ── Single horizontal strikethrough line (TCS signature element)
+    //      At ~52% height → visually bisects the uppercase characters
+    const strikeY = H * 0.52 + rand(-6, 6);
+    ctx.beginPath();
+    ctx.moveTo(slotW * 0.3, strikeY);
+    ctx.lineTo(W - slotW * 0.3, strikeY);
+    ctx.strokeStyle = 'rgba(110, 120, 140, 0.60)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
   }
 }
