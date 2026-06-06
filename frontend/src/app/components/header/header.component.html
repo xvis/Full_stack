@@ -13,16 +13,17 @@
 
     <!-- Main Navigation -->
     <nav class="main-nav" aria-label="Main navigation">
-      <a href="#" class="nav-item">Products</a>
-      <a href="#" class="nav-item">Solutions</a>
-      <a href="#" class="nav-item">Pricing</a>
-      <a href="#" class="nav-item">Security</a>
+      <a href="#" class="nav-item">{{ 'header.products' | translate }}</a>
+      <a href="#" class="nav-item">{{ 'header.solutions' | translate }}</a>
+      <a href="#" class="nav-item">{{ 'header.pricing' | translate }}</a>
+      <a href="#" class="nav-item">{{ 'header.security' | translate }}</a>
     </nav>
 
     <!-- Header Actions -->
     <div class="header-actions">
-      <a href="#" class="nav-link-plain">Documentation</a>
-      <a href="#" class="btn-cta">Contact Sales</a>
+      <a href="#" class="nav-link-plain">{{ 'header.documentation' | translate }}</a>
+      <a href="#" class="btn-cta">{{ 'header.contactSales' | translate }}</a>
+      <app-language-switcher></app-language-switcher>
     </div>
 
   </div>

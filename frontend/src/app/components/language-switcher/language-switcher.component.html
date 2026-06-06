@@ -1,0 +1,26 @@
+<div class="lang-switcher">
+  <button class="lang-btn" (click)="toggle()" [attr.aria-expanded]="isOpen" aria-haspopup="listbox">
+    <span class="lang-flag">{{ current.flag }}</span>
+    <span class="lang-code">{{ current.code | uppercase }}</span>
+    <svg class="lang-chevron" [class.open]="isOpen" width="12" height="12"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </button>
+
+  <ul *ngIf="isOpen" class="lang-dropdown" role="listbox">
+    <li *ngFor="let lang of languages"
+        class="lang-option"
+        [class.active]="lang.code === current.code"
+        (click)="select(lang)"
+        role="option"
+        [attr.aria-selected]="lang.code === current.code">
+      <span class="lang-flag">{{ lang.flag }}</span>
+      <span class="lang-name">{{ lang.label }}</span>
+      <svg *ngIf="lang.code === current.code" class="lang-check" width="13" height="13"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </li>
+  </ul>
+</div>

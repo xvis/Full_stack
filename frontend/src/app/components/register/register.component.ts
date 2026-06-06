@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CaptchaComponent } from '../captcha/captcha.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 function passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
   const pw  = group.get('password')?.value;
@@ -23,7 +24,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, FooterComponent, RouterLink, CaptchaComponent],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, FooterComponent, RouterLink, CaptchaComponent, TranslateModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -61,10 +62,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ];
 
   readonly steps = [
-    { num: 1, label: 'Basic Details', subtitle: 'Tell us a bit about yourself' },
-    { num: 2, label: 'Address',       subtitle: 'Where are you located?' },
-    { num: 3, label: 'Security',      subtitle: 'Help us protect your account' },
-    { num: 4, label: 'Verify Email',  subtitle: 'Confirm your email address' }
+    { num: 1, label: 'register.step1Label' },
+    { num: 2, label: 'register.step2Label' },
+    { num: 3, label: 'register.step3Label' },
+    { num: 4, label: 'register.step4Label' }
   ];
 
   constructor(

@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CaptchaComponent } from '../captcha/captcha.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 function passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
   const pw  = group.get('newPassword')?.value;
@@ -20,7 +21,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, FooterComponent, RouterLink, CaptchaComponent],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, FooterComponent, RouterLink, CaptchaComponent, TranslateModule],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.css'
 })
@@ -51,9 +52,9 @@ export class ForgotPasswordComponent implements OnInit {
   private resolvedUsername = '';
 
   readonly steps = [
-    { num: 1, label: 'Find Account' },
-    { num: 2, label: 'Verify Identity' },
-    { num: 3, label: 'New Password' }
+    { num: 1, label: 'forgotPassword.step1Label' },
+    { num: 2, label: 'forgotPassword.step2Label' },
+    { num: 3, label: 'forgotPassword.step3Label' }
   ];
 
   constructor(

@@ -1,101 +1,168 @@
-/* ══════════════════════════════════════════════════════════
-   CAPTCHA Component
-   ══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   CAPTCHA — TCS iBegin style
+   ═══════════════════════════════════════════ */
 
-.captcha-container { display: flex; flex-direction: column; gap: 8px; }
+/* ── Outer wrapper ── */
+.captcha-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-.captcha-label { font-size: .8rem; font-weight: 600; color: #374151; margin: 0; }
-.req           { color: #EF4444; margin-left: 2px; }
+/* ── Label above the box ── */
+.captcha-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+.captcha-req { color: #EF4444; }
 
-/* ── Canvas row ── */
-.captcha-row { display: flex; align-items: center; gap: 10px; }
+/* ── The bordered box (canvas + divider + input row) ── */
+.captcha-box {
+  display: inline-flex;
+  flex-direction: column;
+  width: 260px;
+  border: 1px solid #C5CAD0;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: border-color 0.15s;
+}
+.captcha-box:focus-within:not(.box--error):not(.box--success) {
+  border-color: #4A90D9;
+}
+.captcha-box.box--error   { border-color: #DC2626; }
+.captcha-box.box--success { border-color: #16A34A; }
 
+/* ── Canvas area ── */
+.captcha-canvas-area {
+  position: relative;
+  background: #ffffff;
+}
+
+/* THIS IS THE KEY FIX — constrain the canvas to the box */
 .captcha-canvas {
-  flex: 1;
-  border: 1.5px solid #CBD5E1;
-  border-radius: 10px;
   display: block;
+  width: 100%;
+  height: 70px;
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* Refresh button */
-.refresh-btn {
-  width: 40px; height: 40px; flex-shrink: 0;
-  border-radius: 10px;
-  border: 1.5px solid #E2E8F0;
-  background: #F8FAFC;
-  color: #64748B;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s ease;
+/* Success overlay */
+.captcha-success-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(240, 253, 244, 0.95);
+  animation: cap-fadein 0.2s ease;
 }
-.refresh-btn:hover {
-  border-color: #2563EB;
-  color: #2563EB;
-  background: #EFF6FF;
+.captcha-check {
+  width: 26px; height: 26px;
+  background: #16A34A;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  animation: cap-pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.refresh-btn:hover svg { animation: spin-refresh .45s ease; }
-@keyframes spin-refresh { from { transform: rotate(0deg); } to { transform: rotate(180deg); } }
+.captcha-verified {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #15803D;
+}
 
-/* ── Input wrapper ── */
-.captcha-input-wrap {
-  position: relative; display: flex; align-items: center;
-  transition: all .2s;
+/* ── Hairline divider ── */
+.captcha-divider {
+  height: 1px;
+  background: #C5CAD0;
+  flex-shrink: 0;
 }
 
-.cap-icon {
-  position: absolute; left: 12px;
-  color: #94A3B8; display: flex; align-items: center;
-  pointer-events: none;
+/* ── Input + refresh row ── */
+.captcha-input-row {
+  display: flex;
+  align-items: stretch;
+  background: #ffffff;
 }
 
 .captcha-input {
-  width: 100%; height: 44px;
-  padding: 0 40px 0 40px;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-family: 'Courier New', 'Courier', monospace;
-  color: #0F172A;
-  background: #F8FAFC;
-  letter-spacing: .25em;
+  flex: 1;
+  height: 36px;
+  padding: 0 10px;
+  border: none;
   outline: none;
-  transition: border-color .2s, box-shadow .2s;
+  font-size: 0.82rem;
+  font-family: inherit;
+  color: #374151;
+  background: transparent;
+  letter-spacing: 0.04em;
   box-sizing: border-box;
 }
-.captcha-input:focus {
-  border-color: #2563EB; background: #fff;
-  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+.captcha-input::placeholder {
+  color: #9CA3AF;
+  font-size: 0.78rem;
+  letter-spacing: 0;
 }
 
-/* Error state — red + shake */
-.captcha-input-wrap.is-error .captcha-input {
-  border-color: #EF4444;
-  box-shadow: 0 0 0 3px rgba(239,68,68,.08);
-  animation: shake .35s ease;
+/* Refresh button — right side with vertical divider */
+.captcha-refresh-btn {
+  width: 36px;
+  flex-shrink: 0;
+  border: none;
+  border-left: 1px solid #C5CAD0;
+  background: #F4F5F6;
+  color: #6B7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
 }
-@keyframes shake {
-  0%,100% { transform: translateX(0);  }
-  20%,60%  { transform: translateX(-5px); }
-  40%,80%  { transform: translateX(5px);  }
+.captcha-refresh-btn:hover {
+  background: #E8EAEC;
+  color: #374151;
+}
+.captcha-refresh-btn:hover svg {
+  animation: cap-spin 0.4s ease;
 }
 
-/* Success state — green */
-.captcha-input-wrap.is-success .captcha-input {
-  border-color: #16A34A;
-  box-shadow: 0 0 0 3px rgba(22,163,74,.1);
+/* Shake on error */
+.captcha-box.box--error .captcha-input {
+  animation: cap-shake 0.36s ease;
 }
 
-.status-icon {
-  position: absolute; right: 12px;
-  display: flex; align-items: center;
+/* ── Error message below box ── */
+.captcha-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #DC2626;
+  margin: 0;
 }
 
-/* ── Feedback text ── */
-.cap-msg {
-  display: flex; align-items: center; gap: 5px;
-  font-size: .78rem; margin: 0;
+/* ── Animations ── */
+@keyframes cap-spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(180deg); }
 }
-.cap-error   { color: #DC2626; }
-.cap-success { color: #16A34A; font-weight: 500; }
+@keyframes cap-shake {
+  0%, 100% { transform: translateX(0);   }
+  20%, 60%  { transform: translateX(-4px); }
+  40%, 80%  { transform: translateX( 4px); }
+}
+@keyframes cap-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cap-pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
