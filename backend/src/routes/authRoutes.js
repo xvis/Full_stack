@@ -22,6 +22,25 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
+// ── Ensure users table exists ───────────────────────────────────────────────
+(async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Users table ready');
+  } catch (err) {
+    console.error('Users table creation note:', err.message);
+  }
+})();
+
 // ── Auto-migrate: add TOTP columns if not present ───────────────────────────
 (async () => {
   try {
