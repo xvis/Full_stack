@@ -7,6 +7,15 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+FROM jenkins/jenkins:lts
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y nodejs npm && \
+    apt-get clean
+
+USER jenkins
 # Copy source code and build Angular application
 COPY . .
 RUN npm run build
