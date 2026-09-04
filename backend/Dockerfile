@@ -2,6 +2,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+FROM jenkins/jenkins:lts
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y nodejs npm && \
+    apt-get clean
+
+USER jenkins
 # Install production dependencies
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
